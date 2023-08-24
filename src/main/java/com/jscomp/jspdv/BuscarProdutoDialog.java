@@ -36,10 +36,6 @@ public class BuscarProdutoDialog extends JDialog {
     List<Produto> resultados = new ArrayList<>();
     resultadoPesquisa.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        
-
-       
-
         try (Connection conexao = DriverManager.getConnection(URL, USUARIO, SENHA)) {
             String sql = "SELECT * FROM produtos WHERE nome LIKE ?";
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -77,42 +73,6 @@ public class BuscarProdutoDialog extends JDialog {
     resultadoPesquisa.setModel(listModel);
 }
 
-  private void adicionarListenerClique() {
-    resultadoPesquisa.addMouseListener(new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            int indexSelecionado = resultadoPesquisa.getSelectedIndex();
-
-            // Verifique se o índice selecionado é válido
-            if (indexSelecionado >= 0 && indexSelecionado < resultados.size()) {
-                Produto produtoSelecionado = resultados.get(indexSelecionado);
-                notificarProdutoSelecionado(produtoSelecionado);
-                dispose(); // Fechar a janela após a seleção
-            }
-        }
-    });
-}
-
-    private void produtoSelecionado() {
-        String termoPesquisa = campoPesquisa.getText();
-        List<Produto> resultados = pesquisarProdutos(termoPesquisa);
-
-        if (resultados.size() == 1) {
-            // Se houver apenas um resultado, selecione-o automaticamente
-            Produto produtoSelecionado = resultados.get(0);
-            if (produtoSelecionadoListener != null) {
-                produtoSelecionadoListener.produtoSelecionado(produtoSelecionado);
-            }
-            dispose(); // Fechar a janela após a seleção
-        }
-    }
-     
-    private void notificarProdutoSelecionado(Produto produto) {
-    if (produtoSelecionadoListener != null) {
-        produtoSelecionadoListener.produtoSelecionado(produto);
-    }
-}
-    
     
     public BuscarProdutoDialog(JFrame parent, TelaVendaPdv telaVendaPdv) {
     super(parent, "Buscar Produto", true);

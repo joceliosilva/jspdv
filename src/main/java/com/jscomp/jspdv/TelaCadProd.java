@@ -38,6 +38,7 @@ public class TelaCadProd extends javax.swing.JFrame {
         txtEan = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("ADD PROD - JSPDV");
 
         btnCadProd.setText("Cadastrar");
         btnCadProd.addActionListener(new java.awt.event.ActionListener() {
@@ -169,9 +170,9 @@ public class TelaCadProd extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCadProdActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-                  TelaInicial telaInicial = new TelaInicial();
-                telaInicial.setLocationRelativeTo(null); // Centralize a tela
-                telaInicial.setVisible(true);
+                TelaAdm telaAdm = new TelaAdm();
+                telaAdm.setLocationRelativeTo(null); // Centralize a tela
+                telaAdm.setVisible(true);
                 dispose(); // Feche a tela de login
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -179,14 +180,10 @@ public class TelaCadProd extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }

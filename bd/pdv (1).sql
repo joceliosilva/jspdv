@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 23/08/2023 às 21:50
+-- Tempo de geração: 24/08/2023 às 22:25
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -24,6 +24,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `historico_vendas`
+--
+
+CREATE TABLE `historico_vendas` (
+  `id` int(11) NOT NULL,
+  `data_venda` datetime DEFAULT NULL,
+  `itens_vendidos` text DEFAULT NULL,
+  `valor_total` decimal(10,2) DEFAULT NULL,
+  `valor_pago` decimal(10,2) DEFAULT NULL,
+  `troco` decimal(10,2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `historico_vendas`
+--
+
+INSERT INTO `historico_vendas` (`id`, `data_venda`, `itens_vendidos`, `valor_total`, `valor_pago`, `troco`) VALUES
+(1, '2023-08-24 14:14:08', '========== Cupom de Venda ==========\nJS SISTEMAS INFO\nData da Venda: 24/08/2023 14:14:08\n====================================\nItens Comprados:\nLUSTRA MOVEIS YPE 200ML - R$5.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\n====================================\nValor Total: R$9,97\nValor Pago: R$10,00\nTroco: R$0,03\n', 9.97, 10.00, 0.03),
+(2, '2023-08-24 14:37:27', '========== Cupom de Venda ==========\nJS SISTEMAS INFO\nData da Venda: 24/08/2023 14:37:27\n====================================\nItens Comprados:\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\n====================================\nValor Total: R$15,92\nValor Pago: R$20,00\nTroco: R$4,08\n', 15.92, 20.00, 4.08),
+(3, '2023-08-24 15:20:12', '========== Cupom de Venda ==========\nJS SISTEMAS INFO\nData da Venda: 24/08/2023 15:20:12\n====================================\nItens Comprados:\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\n====================================\nValor Total: R$5,97\nValor Pago: R$20,00\nTroco: R$14,03\n', 5.97, 20.00, 14.03),
+(4, '2023-08-24 16:10:18', '========== Cupom de Venda ==========\nJS SISTEMAS INFO\nData da Venda: 24/08/2023 16:10:18\n====================================\nItens Comprados:\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\n====================================\nValor Total: R$3,98\nValor Pago: R$5,00\nTroco: R$1,02\n', 3.98, 5.00, 1.02),
+(5, '2023-08-24 16:38:28', '========== Cupom de Venda ==========\nJS SISTEMAS INFO\nData da Venda: 24/08/2023 16:38:28\n====================================\nItens Comprados:\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\nLUSTRA MOVEIS YPE 200ML - R$5.99\n====================================\nValor Total: R$9,97\nValor Pago: R$50,00\nTroco: R$40,03\n', 9.97, 50.00, 40.03),
+(6, '2023-08-24 17:10:23', '========== Cupom de Venda ==========\nJS SISTEMAS INFO\nData da Venda: 24/08/2023 17:10:23\n====================================\nItens Comprados:\nSALGADINHO PIPOS 30G - R$6.99\nGRAMPOS P/GRAMPEADOR BCO - R$1.99\n====================================\nValor Total: R$8,98\nValor Pago: R$10,00\nTroco: R$1,02\n', 8.98, 10.00, 1.02);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `produtos`
 --
 
@@ -40,7 +67,8 @@ CREATE TABLE `produtos` (
 
 INSERT INTO `produtos` (`id`, `nome`, `ean`, `preco`) VALUES
 (9, 'GRAMPOS P/GRAMPEADOR BCO', '7896303620068', 1.99),
-(10, 'LUSTRA MOVEIS YPE 200ML', '7896098909980', 5.99);
+(10, 'LUSTRA MOVEIS YPE 200ML', '7896098909980', 5.99),
+(11, 'SALGADINHO PIPOS 30G', '7896071', 6.99);
 
 -- --------------------------------------------------------
 
@@ -67,6 +95,12 @@ INSERT INTO `usuarios` (`id`, `username`, `senha`) VALUES
 --
 
 --
+-- Índices de tabela `historico_vendas`
+--
+ALTER TABLE `historico_vendas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Índices de tabela `produtos`
 --
 ALTER TABLE `produtos`
@@ -83,10 +117,16 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de tabela `historico_vendas`
+--
+ALTER TABLE `historico_vendas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT de tabela `produtos`
 --
 ALTER TABLE `produtos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
