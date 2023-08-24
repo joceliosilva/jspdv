@@ -20,27 +20,36 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
  * @author Esc_Big03
  */
-public class TelaVendaPdv extends javax.swing.JFrame {
+public class TelaVendaPdv extends javax.swing.JFrame implements ProdutoSelecionadoListener  {
    private static final String URL = "jdbc:mysql://localhost:3306/pdv";
     private static final String USUARIO = "root";
     private static final String SENHA = "";
     private DecimalFormat decimalFormat = new DecimalFormat("#0.00");
     private List<Produto> carrinho = new ArrayList<>();
     private double valorTotal = 0.0;
- 
+
+
     
     public TelaVendaPdv() {
         initComponents();
+        BuscarProdutoDialog buscarProdutoDialog;
+        TelaVendaPdv telaVendaPdv = this;
+         buscarProdutoDialog = new BuscarProdutoDialog(this, this); 
+        buscarProdutoDialog.setProdutoSelecionadoListener(this); // Certifique-se de que TelaVendaPdv implementa ProdutoSelecionadoListener
+
         codigoBarrasTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -62,6 +71,37 @@ public class TelaVendaPdv extends javax.swing.JFrame {
     
     
     });}
+       
+    public void produtoSelecionado(Produto produto) {
+        // Lógica para importar o produto selecionado
+        // Por exemplo, você pode adicionar o produto ao carrinho
+        carrinho.add(produto);
+        valorTotal += produto.getPreco();
+        atualizarCarrinho();
+    }
+    
+   
+   
+    public void valueChanged(ListSelectionEvent e) {
+        if (!e.getValueIsAdjusting()) {
+            // Verifique se o evento não é de ajuste (evita chamadas duplicadas)
+
+            JList<Produto> lista = (JList<Produto>) e.getSource();
+
+            if (!lista.isSelectionEmpty()) {
+                Produto produtoSelecionado = lista.getSelectedValue();
+
+                // Agora você pode importar o produto para a TelaVendaPDV
+                // Implemente a lógica aqui, por exemplo, adicionando-o ao carrinho
+                carrinho.add(produtoSelecionado);
+                valorTotal += produtoSelecionado.getPreco();
+                atualizarCarrinho();
+
+                // Limpe a seleção da lista
+                lista.clearSelection();
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -83,6 +123,7 @@ public class TelaVendaPdv extends javax.swing.JFrame {
         valorPagoTextField = new javax.swing.JTextField();
         trocoLabel = new javax.swing.JTextField();
         bntFinalizar = new javax.swing.JButton();
+        btnBuscarProd = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -121,15 +162,28 @@ public class TelaVendaPdv extends javax.swing.JFrame {
             }
         });
 
+        btnBuscarProd.setText("Buscar");
+        btnBuscarProd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProdActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(190, 190, 190))
             .addGroup(layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(codigoBarrasTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(codigoBarrasTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscarProd)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -152,10 +206,6 @@ public class TelaVendaPdv extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(71, 71, 71))))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(190, 190, 190))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +213,9 @@ public class TelaVendaPdv extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(codigoBarrasTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(codigoBarrasTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProd))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -182,7 +234,7 @@ public class TelaVendaPdv extends javax.swing.JFrame {
                         .addComponent(trocoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(bntFinalizar)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -199,6 +251,13 @@ public class TelaVendaPdv extends javax.swing.JFrame {
     private void valorPagoTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valorPagoTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_valorPagoTextFieldActionPerformed
+
+    private void btnBuscarProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProdActionPerformed
+      BuscarProdutoDialog dialog = new BuscarProdutoDialog(this,TelaVendaPdv.this);
+        
+        // Exiba a janela de diálogo
+        dialog.exibirDialog();
+    }//GEN-LAST:event_btnBuscarProdActionPerformed
 
     /**
      * @param args the command line arguments
@@ -234,7 +293,7 @@ public class TelaVendaPdv extends javax.swing.JFrame {
             }
         });
     }
-    private void adicionarProduto() {
+    public void adicionarProduto() {
         String codigoBarras = codigoBarrasTextField.getText();
         Produto produto = buscarProdutoNoBanco(codigoBarras);
 
@@ -293,7 +352,7 @@ public class TelaVendaPdv extends javax.swing.JFrame {
                 }
 
                 String cupomText = gerarCupom(itensVenda, valorTotal, valorPago, troco);
-
+                 salvarHistoricoVenda(cupomText, valorTotal, valorPago, troco);
                 carrinho.clear();
                 valorTotal = 0.0;
                 atualizarCarrinho();
@@ -357,10 +416,26 @@ public class TelaVendaPdv extends javax.swing.JFrame {
             trocoLabel.setText(" ");
         }
     }
+        private void salvarHistoricoVenda(String cupomText, double valorTotal, double valorPago, double troco) {
+    try (Connection conexao = DriverManager.getConnection(URL, USUARIO, SENHA)) {
+        String sql = "INSERT INTO historico_vendas (data_venda, itens_vendidos, valor_total, valor_pago, troco) VALUES (NOW(), ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, cupomText);
+            stmt.setDouble(2, valorTotal);
+            stmt.setDouble(3, valorPago);
+            stmt.setDouble(4, troco);
+            stmt.executeUpdate();
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bntFinalizar;
+    public javax.swing.JButton btnBuscarProd;
     private javax.swing.JTextArea carrinhoTextArea;
     public javax.swing.JTextField codigoBarrasTextField;
     private javax.swing.JLabel jLabel1;
@@ -372,4 +447,6 @@ public class TelaVendaPdv extends javax.swing.JFrame {
     private javax.swing.JTextField valorPagoTextField;
     private javax.swing.JTextField valorTotalLabel;
     // End of variables declaration//GEN-END:variables
+
+   
 }
